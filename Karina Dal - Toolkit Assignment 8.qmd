@@ -1,0 +1,238 @@
+---
+title: "Karina Dal assignment 8"
+format: html
+editor: visual
+---
+
+## Quarto
+
+In the last task, I performed an analysis on the wrongly-designed plots that could lead to misinformation and unreliability of data.
+
+The current task is to try to reproduce one of the wrong plots, but with corrections and improvements, for it to be more understandable and accurate.
+
+For the task, I chose the second of my presented plots, the one about a social media analytics graphic comparing the online engagement of political candidates for a mayoral election (prefeitura) in Brazil.
+
+The analysed graphic:
+
+![](images/clipboard-2265823676.png){width="350"}
+
+As a short summary of what was bad about it :
+
+-   wrong distribution and inaccurate proportions of the shown data,
+
+-   the shown values just weren't represented proportionaly, which may have been a intentional action for propaganda purposes.
+
+    Because of it's simple context, I decided to try to represent the data in an accurate way, presented below:
+
+## Plots:
+
+**Plot 1:**
+
+The code below represents the attempt to replicate the corrected version of the plot, commented with explanation of what does the code do.
+
+```{r}
+
+# Load necessary library
+library(ggplot2)
+
+# Data
+values <- c(40, 34, 14)
+labels <- c("Arthur Do Val", "Opponent 1", "Opponent 2")  
+colors <- c("darkblue", "darkred", "darkred")
+
+
+# Creating dataframe
+df <- data.frame(
+  candidate = labels,
+  percentage = values,
+  color = colors
+)
+
+# Sort data from highest to lowest for horizontal bar order
+# Sort the whole dataframe - order orders it from highest to lowest by percentage
+df1 <- df[order(df$percentage), ] 
+
+# Convert candidate to a factor in the correct order
+df1$candidate <- factor(df1$candidate, levels = df1$candidate)
+
+#order and factor set how our data is displayed, i want the percentages to be prioritised from highest to lowest
+
+# Plot
+ggplot(df1, aes(x = candidate, y = percentage, fill = candidate)) + # Creates a plot with ggplot, from the df dataframe, aes setting the axis values with x candidates, y percentages and filling with candidates
+  
+  # Bar geometry
+  geom_bar(stat = "identity", width = 0.6, show.legend = FALSE) +
+  # geom_bar creates bar chart, stat identity takes the real values we have, and doesnt calculate anything, the rest controls the apprearance
+  
+  # Horizontal orientation - changes our bars to be horizontal
+  coord_flip() +
+  
+  # Add percentage labels to the right of each bar
+  geom_text(
+    aes(label = paste0(percentage, "%")), # Add percentage with % at the end of the bars
+    hjust = -0.1,                # Push text a little to the right
+    size = 5,                    # Set the righr size
+    fontface = "bold"           # Bold text
+  ) +
+  
+  # Set custom colors manually
+  scale_fill_manual(values = df1$color) +
+  
+  # Set x-axis (bar length) limit - for the percentages to show correctly and for the better grasp of the scale
+  scale_y_continuous(limits = c(0, 50), expand = expansion(mult = c(0, 0.05))) +
+  #scale_y_continuous customizes the y axis, continuous meaning its numeric, sets its size with limits, and adds extra space with expand
+  
+  # Title - sets a makin title and doesnt any to axises because we dont need ones
+  labs(
+    title = "No Facebook Arthur é responsável por 40% de toda interação\nenvolvendo candidatos à prefeitura.",
+    x = NULL,
+    y = NULL
+  ) +
+  
+  # Theme and text settings 
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title = element_text(size = 13, face = "bold"), # Make the font more originial plot accurate
+    axis.text.y = element_text(size = 10),   # Adjust label font size
+    axis.text.x = element_blank(),           # Hide x-axis tick values
+    panel.grid.major = element_blank(),    # Remove y-axis gridlines
+    panel.grid.minor = element_blank()     # Remove the rest of the gridlines
+  )
+
+
+
+
+```
+
+**PLOT 2**
+
+Done in the same way, but with changed values. Comments are also the same.
+
+```{r}
+# Load necessary library
+library(ggplot2)
+
+# Data
+values <- c(44, 36, 11)
+labels <- c("Arthur Do Val", "Opponent 1", "Opponent 2")  
+colors <- c("darkblue", "darkred", "darkred")
+
+# Creating dataframe
+df <- data.frame(
+  candidate = labels,
+  percentage = values,
+  color = colors
+)
+
+# Sort data from highest to lowest for horizontal bar order
+# Sort the whole dataframe - order orders it from highest to lowest by percentage
+df2 <- df[order(df$percentage), ] 
+
+# Convert candidate to a factor in the correct order
+df2$candidate <- factor(df2$candidate, levels = df2$candidate)
+
+# Plot
+ggplot(df2, aes(x = candidate, y = percentage, fill = candidate)) + # Creates a plot with ggplot, from the df dataframe, aes setting the axis values with x candidates, y percentages and filling with candidates
+  
+  # Bar geometry
+  geom_bar(stat = "identity", width = 0.6, show.legend = FALSE) +
+  # geom_bar creates bar chart, stat identity takes the real values we have, and doesnt calculate anything, the rest controls the apprearance
+  
+  # Horizontal orientation - changes our bars to be horizontal
+  coord_flip() +
+  
+  # Add percentage labels to the right of each bar
+  geom_text(
+    aes(label = paste0(percentage, "%")), # Add percentage with % at the end of the bars
+    hjust = -0.1,                # Push text a little to the right
+    size = 5,                    # Set the righr size
+    fontface = "bold"           # Bold text
+  ) +
+  
+  # Set custom colors manually
+  scale_fill_manual(values = df2$color) +
+  
+  # Set x-axis (bar length) limit - for the percentages to show correctly and for the better grasp of the scale
+  scale_y_continuous(limits = c(0, 50), expand = expansion(mult = c(0, 0.05))) +
+  #scale_y_continuous customizes the y axis, continuous meaning its numeric, sets its size with limits, and adds extra space with expand
+  
+  # Title - sets a makin title and doesnt any to axises because we dont need ones
+  labs(
+    title = "No Instagram a vantagem e ainda maior, onde Arthur do\nVal acumula 44%",
+    x = NULL,
+    y = NULL
+  ) +
+  
+  # Theme and text settings 
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title = element_text(size = 13, face = "bold"), # Make the font more originial plot accurate
+    axis.text.y = element_text(size = 10),   # Adjust label font size
+    axis.text.x = element_blank(),           # Hide x-axis tick values
+    panel.grid.major = element_blank(),    # Remove y-axis gridlines
+    panel.grid.minor = element_blank()     # Remove the rest of the gridlines
+  )
+
+
+
+```
+
+The only thing lacking is the graphical representations of the candidates, to the left of the bar plots. I tried to compensate this by writing the name of the main candidate and the rest as opponents. When it comes to the rest, overall I think I did my task well, as it goes for the R code part, these plots could be improved by editing in photoshop presets, like adding main photo of the candidate to the right as it was done in the original image, and overall aligning everything in one document.
+
+```{Do Val", "Opponent 1", "Opponent 2")}
+colors <- c("darkblue", "darkred", "darkred")
+
+# Create data frame
+df <- data.frame(
+  candidate = labels, # Containing names of the candidates
+  percentage = values, # Containing values
+  color = colors # Containing colors of the set bars
+)
+
+# Sort data from lowest to highest for horizontal bar order
+df$candidate <- factor(df$candidate, levels = df$candidate[order(df$percentage)]) 
+#order and factor set how our data is displayed, i want the percentages to be prioritised from highest to lowest
+
+# Plot
+ggplot(df, aes(x = candidate, y = percentage, fill = candidate)) + # Creates a plot with ggplot, from the df dataframe, aes setting the axis values with x candidates, y percentages and filling with candidates
+  
+  # Bar geometry
+  geom_bar(stat = "identity", width = 0.6, show.legend = FALSE) +
+  # geom_bar creates bar chart, stat identity takes the real values we have, and doesnt calculate anything, the rest controls the apprearance
+  
+  # Horizontal orientation - changes our bars to be horizontal
+  coord_flip() +
+  
+  # Add percentage labels to the right of each bar
+  geom_text(
+    aes(label = paste0(percentage, "%")), # Add percentage with % at the end of the bars
+    hjust = -0.1,                # Push text a little to the right
+    size = 5,                    # Set the righr size
+    fontface = "bold"           # Bold text
+  ) +
+  
+  # Set custom colors manually
+  scale_fill_manual(values = df$color) +
+  
+  # Set x-axis (bar length) limit - for the percentages to show correctly and for the better grasp of the scale
+  scale_y_continuous(limits = c(0, 50), expand = expansion(mult = c(0, 0.05))) +
+  #scale_y_continuous customizes the y axis, continuous meaning its numeric, sets its size with limits, and adds extra space with expand
+  
+  # Title - sets a makin title and doesnt any to axises because we dont need ones
+  labs(
+    title = "No Instagram a vantagem e ainda maior, onde Arthur do\nVal acumula 44%",
+    x = NULL,
+    y = NULL
+  ) +
+  
+  # Theme and text settings 
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title = element_text(size = 13, face = "bold"), # Make the font more originial plot accurate
+    axis.text.y = element_text(size = 10),   # Adjust label font size
+    axis.text.x = element_blank(),           # Hide x-axis tick values
+    panel.grid.major = element_blank(),    # Remove y-axis gridlines
+    panel.grid.minor = element_blank()     # Remove the rest of the gridlines
+  )
+
+```
